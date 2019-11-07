@@ -1,13 +1,17 @@
 import math
 
+
+WIDTH = 800
+HEIGHT = 800
+origin = (WIDTH / 2, HEIGHT / 2)
+
 alien = Actor('rocket2')
 alien.pos = 100, 56
 alien.velocity = [0, 0]
 
-bullets = []
 
-WIDTH = 800
-HEIGHT = 800
+
+bullets = []
 
 def draw():
     screen.clear()
@@ -15,6 +19,7 @@ def draw():
     alien.draw()
     for bullet in bullets:
         bullet.draw()
+    screen.draw.circle(origin, 30, 'black')
 
 def update():
     for bullet in bullets:
@@ -22,6 +27,8 @@ def update():
     update_thing(alien)
 
 def update_thing(thing):
+    # gravity(thing)
+
     thing.left += thing.velocity[0]
     thing.top += thing.velocity[1]
 
@@ -33,6 +40,23 @@ def update_thing(thing):
         thing.left = WIDTH
     if thing.top < 0:
         thing.top = HEIGHT
+
+def gravity(thing):
+    G = 0.01
+    # d = 10000 / dist(thing.pos, origin) ** 2
+
+    dx = thing.pos[0] - origin[0]
+    dy = thing.pos[1] - origin[1]
+
+    theta = math.atan(dy/dx)
+
+    thing.velocity[0] -= math.sin(theta) * G
+    thing.velocity[1] -= math.cos(theta) * G
+
+
+def dist(a, b):
+    dsq = (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2
+    return math.sqrt(dsq)
 
 def on_key_down(key, mod, unicode):
     if key == keys.LEFT:
