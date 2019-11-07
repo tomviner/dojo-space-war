@@ -6,6 +6,7 @@ HEIGHT = 800
 origin = (WIDTH / 2, HEIGHT / 2)
 
 alien = Actor('rocket2')
+alien.life = 0
 alien.pos = 100, 56
 alien.velocity = [0, 0]
 
@@ -22,9 +23,13 @@ def draw():
     screen.draw.circle(origin, 30, 'black')
 
 def update():
+    global bullets
+
     for bullet in bullets:
         update_thing(bullet)
+    bullets = [bullet for bullet in bullets if bullet.life > 0]
     update_thing(alien)
+
 
 def update_thing(thing):
     # gravity(thing)
@@ -41,6 +46,12 @@ def update_thing(thing):
     if thing.top < 0:
         thing.top = HEIGHT
 
+    try:
+        thing.life -= 1
+    except:
+        pass
+
+
 def gravity(thing):
     G = 0.01
     # d = 10000 / dist(thing.pos, origin) ** 2
@@ -56,7 +67,6 @@ def gravity(thing):
 
 def dist(a, b):
     dsq = (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2
-    return math.sqrt(dsq)
 
 def on_key_down(key, mod, unicode):
     if key == keys.LEFT:
@@ -69,6 +79,7 @@ def on_key_down(key, mod, unicode):
     elif key == keys.F:
         bullet = Actor('zap')
         bullet.pos = alien.pos
+        bullet.life = 200
         bullet.velocity = alien.velocity.copy()
         bullet.velocity[0] -= math.sin(math.radians(alien.angle)) * 3
         bullet.velocity[1] -= math.cos(math.radians(alien.angle)) * 3
