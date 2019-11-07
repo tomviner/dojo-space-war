@@ -17,9 +17,13 @@ def draw():
         bullet.draw()
 
 def update():
+    global bullets
+
     for bullet in bullets:
         update_thing(bullet)
+    bullets = [bullet for bullet in bullets if bullet.life > 0]
     update_thing(alien)
+
 
 def update_thing(thing):
     thing.left += thing.velocity[0]
@@ -34,6 +38,11 @@ def update_thing(thing):
     if thing.top < 0:
         thing.top = HEIGHT
 
+    try:
+        thing.life -= 1
+    except:
+        pass
+
 def on_key_down(key, mod, unicode):
     if key == keys.LEFT:
         alien.angle += 20
@@ -45,6 +54,7 @@ def on_key_down(key, mod, unicode):
     elif key == keys.F:
         bullet = Actor('zap')
         bullet.pos = alien.pos
+        bullet.life = 200
         bullet.velocity = alien.velocity.copy()
         bullet.velocity[0] -= math.sin(math.radians(alien.angle)) * 3
         bullet.velocity[1] -= math.cos(math.radians(alien.angle)) * 3
