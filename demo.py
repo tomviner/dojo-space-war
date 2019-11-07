@@ -1,6 +1,6 @@
 alien = Actor('rocket2')
 alien.pos = 100, 56
-alien.velocity = 2, 3
+alien.velocity = -2, -3
 
 WIDTH = 800
 HEIGHT = 800
@@ -17,3 +17,8 @@ def update():
         alien.right = 0
     if alien.top > HEIGHT:
         alien.bottom = 0
+    if alien.left < 0:
+        alien.right = WIDTH
+    if alien.top < 0:
+        alien.bottom = HEIGHT
+
